@@ -164,5 +164,29 @@ app.get('/my_playlists', function(req, res) {
     });
   });
 
+
+app.get('/get_tracks', function(req, res) {
+    var user_id = req.query.user_id;
+    var playlist_id = req.query.playlist_id;
+    // requesting access token from refresh token
+    var access_token = req.query.access_token;
+    
+    var authOptions = {
+      url: 'https://api.spotify.com/v1/users/'+user_id+'/playlists/'+playlist_id+'/tracks',
+      headers: { 'Authorization': 'Bearer ' + access_token },      
+      json: true
+    };
+  
+    request.get(authOptions, function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+        res.send({
+          'tracks' :body
+        })
+      }else{
+        console.log(error);
+      }
+    });
+  });
+
 console.log('Listening on 8888');
 app.listen(8888);
