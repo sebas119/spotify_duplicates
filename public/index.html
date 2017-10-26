@@ -31,9 +31,9 @@
         <button class="btn btn-primary" id="get_playlist">Get my Playlist</button>
         <div id="data_playlist">
           <h3>My playlists</h3>
-          <p id="playlist">
+          <div id="playlist">
 
-          </p>
+          </div>
         </div>
       </div>
     </div>
@@ -66,8 +66,17 @@
       </dl>
     </script>
 
-    <script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0-alpha.1/handlebars.min.js"></script>
+    <script id="playlist-name-template" type="text/x-handlebars-template">
+      <h3>Listas de reproduccion</h3>
+      {{#each playlists}}             
+          <p>{{name}} </p>          
+      {{/each}}
+           
+      
+    </script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+    
     <script>
       (function() {
 
@@ -92,6 +101,10 @@
         var oauthSource = document.getElementById('oauth-template').innerHTML,
             oauthTemplate = Handlebars.compile(oauthSource),
             oauthPlaceholder = document.getElementById('oauth');
+
+        var playlistSource = document.getElementById('playlist-name-template').innerHTML,
+            playlistTemplate = Handlebars.compile(playlistSource),
+            playlistPlaceholder = document.getElementById('playlist');
 
         var params = getHashParams();
 
@@ -155,19 +168,28 @@
               }
             }).done(function(data) {
               
-              var playlist = data.playlists
-              var html = "";
+              var playlist = data.playlists;
+
+              var jsonPlaylist = {
+                playlists: playlist
+              }
               
-              console.log(user_id);
+              var html = "";            
               
-              $.each( playlist, function( key, value ) {  
+              console.log(jsonPlaylist);
+              
+              /*$.each( playlist, function( key, value ) {  
                 if (value.owner.id == user_id){
                 html += value.name  + " " + value.owner.id  + "</br>";               
                 }
               });
 
-              $('#playlist').html(html);
+              $('#playlist').html(html);*/
+
+              playlistPlaceholder.innerHTML = playlistTemplate(jsonPlaylist);
+
               $('#data_playlist').show();
+
             });
          });
 
@@ -176,4 +198,6 @@
     </script>
   </body>
 </html>
+
+
 

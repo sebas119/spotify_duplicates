@@ -146,12 +146,10 @@ app.get('/my_playlists', function(req, res) {
   
     // requesting access token from refresh token
     var access_token = req.query.access_token;
+    
     var authOptions = {
-      url: 'https://api.spotify.com/v1/me/playlists',
-      headers: { 'Authorization': 'Bearer ' + access_token },
-      form: {
-        limit: 10  //averiguar como hacer funcionar esto       
-      },
+      url: 'https://api.spotify.com/v1/me/playlists?limit=10',
+      headers: { 'Authorization': 'Bearer ' + access_token },      
       json: true
     };
   
