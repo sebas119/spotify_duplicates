@@ -92,18 +92,15 @@
         }
       }).done(function(data) {
         var playlist = data.playlists;
-        var html = "";
-
+        var html = '<div id="accordion" role="tablist">';
+        
         $.each(playlist, function(key, value) {
           if (value.owner.id == user_id) {
-            html +=
-              '<button class="btn btn-link" onclick="getTracks('+'\''+value.id+'\', \''+user_id  +'\', \''+access_token +'\'' +')">' +
-              value.name +
-              '</button></br>';
+            html += accordionHtml(value.name,value.id,user_id,access_token);
           }
         });
 
-        $("#playlist").html(html);
+        $("#playlist").html(html + '</div>');
         $("#data_playlist").show();
 
         /*var jsonPlaylist = {
@@ -117,6 +114,27 @@
   }
   
 })();
+
+function accordionHtml(name,v_id,u_id,token){
+ var html = '<div class="card">'+
+  '<div class="card-header" role="tab" id="headingOne">'+
+   '<h5 class="mb-0">'+
+      '<a data-toggle="collapse" href="#collapseOne_'+v_id+'" aria-expanded="true" aria-controls="collapseOne_'+v_id+'" onclick="getTracks('+'\''+v_id+'\', \''+u_id  +'\', \''+token +'\'' +')">'+
+      name +
+      '</a>'+
+    '</h5>'+
+  '</div>'+
+
+  '<div id="collapseOne_'+v_id+'" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">'+
+    '<div id="bodyCollapseOne_'+v_id+'" class="card-body">'+
+        "Cargando contenido..."+//aqui va el contenido de la lista
+    '</div>'+
+  '</div>'+
+  '</div>'
+  ;
+
+  return html;
+}
 
 function getTracks(playlistId, userId, accessToken) {
   $.ajax({
@@ -135,8 +153,8 @@ function getTracks(playlistId, userId, accessToken) {
           html += '<button class="btn btn-link">' + value.track.name + '</button></br>';        
       });
 
-      $("#my_tracks").html(html);
-      $("#my_tracks").show();
+      $("#bodyCollapseOne_"+playlistId).html(html);
+     // $("#my_tracks").show();
 
   });
 }
