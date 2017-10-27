@@ -86,7 +86,7 @@
 
     $("#get_playlist").click(function() {
       $.ajax({
-        url: "/my_playlists",
+        url: "/user/my_playlists",
         data: {
           access_token: access_token
         }
@@ -120,7 +120,7 @@
 
 function getTracks(playlistId, userId, accessToken) {
   $.ajax({
-    url: "/get_tracks",
+    url: "/user/get_tracks",
     data: {
       user_id : userId,
       playlist_id: playlistId,
