@@ -41,8 +41,9 @@ router.get('/get_tracks', function(req, res) {
   
     request.get(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
+        trackItems = body.items;
         res.send({
-          'tracks' :body
+          'tracks' :trackItems
         })
       }else{
         console.log(error);

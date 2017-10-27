@@ -126,7 +126,17 @@ function getTracks(playlistId, userId, accessToken) {
       playlist_id: playlistId,
       access_token: accessToken
     }
-  }).done(function(data) {
-      console.log(data.body);
+  }).done(function(data) {      
+      var tracks = data.tracks;
+
+      var html = "";
+
+      $.each(tracks, function(key, value) {        
+          html += '<button class="btn btn-link">' + value.track.name + '</button></br>';        
+      });
+
+      $("#my_tracks").html(html);
+      $("#my_tracks").show();
+
   });
 }
