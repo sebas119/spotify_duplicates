@@ -1,6 +1,7 @@
 var express = require('express');
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
+var User = require('../models/users');
 var router = express.Router();
 
 
@@ -50,5 +51,14 @@ router.get('/get_tracks', function(req, res) {
       }
     });
   });
+
+router.get('/get_users',function(req, res) {
+    User
+      .fetchAll()
+      .then(function(users) {
+        res.json({ users });
+      });
+  });
+
 
   module.exports = router;
