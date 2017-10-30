@@ -56,7 +56,7 @@
           user_id = response.id;
           console.log(response.id);
           $("#login").hide();
-          $("#loggedin").show();
+          $("#loggedin").show();          
         }
       });
     } else {

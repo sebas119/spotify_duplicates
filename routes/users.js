@@ -52,13 +52,34 @@ router.get('/get_tracks', function(req, res) {
     });
   });
 
-router.get('/get_users',function(req, res) {
-    User
-      .fetchAll()
-      .then(function(users) {
-        res.json({ users });
-      });
-  });
+/*router.route('')
+  .get(function(req, res) {
+      User
+        .fetchAll()
+        .then(function(users) {
+          res.json({ users });
+        });
+    })
+  .post(function(req, res){
+
+    var user_data = req.query.user;
+
+    if(req.query){
+      console.log(user_data);
+      res.status(400);
+      res.send('No se ha enviado nada');
+    }else{
+      new User({
+        displayName: req.body.displayName
+      })
+        .save()
+        .then(function(save){
+          res.json({save});
+        })
+    }
+    
+  });*/
+  
 
 
   module.exports = router;

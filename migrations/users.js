@@ -4,9 +4,11 @@ exports.up = function(knex) {
     .createTable('users', function(table) {
       table.increments('id').primary();
       table.string('idUserSpotify')
-      table.string('name');      
+      table.string('displayName');      
       table.string('emailAddress');
+      table.string('spotifyUri');
       table.string('linkUserSpotify');
+      table.string('profileImageLink');
       table.timestamp('created_at').defaultTo(knex.fn.now());      
     });
 };
