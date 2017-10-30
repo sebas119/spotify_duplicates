@@ -127,7 +127,7 @@ function accordionHtml(name,v_id,u_id,token){
 
   '<div id="collapseOne_'+v_id+'" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">'+
     '<div id="bodyCollapseOne_'+v_id+'" class="card-body">'+
-        "Cargando contenido..."+//aqui va el contenido de la lista
+        'Cargando contenido...'+//aqui va el contenido de la lista
     '</div>'+
   '</div>'+
   '</div>'
@@ -147,14 +147,31 @@ function getTracks(playlistId, userId, accessToken) {
   }).done(function(data) {      
       var tracks = data.tracks;
 
-      var html = "";
+      var html = '<table class="table">    <thead class="thead-dark">   <tr>  <th scope="col">#</th>  <th scope="col">Nombre</th> <th scope="col">Accion</th>'
+          html += '</tr> </thead><tbody>"';
 
       $.each(tracks, function(key, value) {        
-          html += '<button class="btn btn-link">' + value.track.name + '</button></br>';        
+          //html += '<button class="btn btn-link">' + value.track.name + '</button></br>';        
+          html += '<tr><th scope="row">'+key+'</th> <td>'+ value.track.name +'</td>  <td><a target="_blank" class="btn btn-primary" href="'+value.track.album.artists[0].external_urls.spotify +'" role="button">Reproducir</a> <button class="btn btn-danger" onclick="deleteTrack('+'\''+ key +'\','+'\''+ value.track.uri +'\',' +'\''+playlistId+'\', \''+userId  +'\', \''+accessToken +'\'' +')" type="button">Eliminar</button ></td> </tr>';
       });
 
-      $("#bodyCollapseOne_"+playlistId).html(html);
+      $("#bodyCollapseOne_"+playlistId).html(html + '</tbody></table>');
      // $("#my_tracks").show();
 
   });
+}
+
+function deleteTrack(position, trackUri, playlistId, userId, accessToken){
+  $.ajax({
+    url: "/user/delete_track",
+    data: {
+      user_id: userId,
+      playlist_id: playlistId,
+      access_token: accessToken,
+      position: position,
+      uri: trackUri
+    }
+  }).done(function(data){
+    console.log(data);
+  })
 }
