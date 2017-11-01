@@ -152,7 +152,7 @@ function getTracks(playlistId, userId, accessToken) {
 
       $.each(tracks, function(key, value) {        
           //html += '<button class="btn btn-link">' + value.track.name + '</button></br>';        
-          html += '<tr><th scope="row">'+key+'</th> <td>'+ value.track.name +'</td>  <td><a target="_blank" class="btn btn-primary" href="'+value.track.album.artists[0].external_urls.spotify +'" role="button">Reproducir</a> <button class="btn btn-danger" onclick="deleteTrack('+'\''+ key +'\','+'\''+ value.track.uri +'\',' +'\''+playlistId+'\', \''+userId  +'\', \''+accessToken +'\'' +')" type="button">Eliminar</button ></td> </tr>';
+          html += '<tr id="fila_'+value.track.uri+'"><th scope="row">'+key+'</th> <td>'+ value.track.name +'</td>  <td><a target="_blank" class="btn btn-primary" href="'+value.track.album.artists[0].external_urls.spotify +'" role="button">Reproducir</a> <button class="btn btn-danger" onclick="deleteTrack('+'\''+ key +'\','+'\''+ value.track.uri +'\',' +'\''+playlistId+'\', \''+userId  +'\', \''+accessToken +'\'' +')" type="button">Eliminar</button ></td> </tr>';
       });
 
       $("#bodyCollapseOne_"+playlistId).html(html + '</tbody></table>');
@@ -162,6 +162,8 @@ function getTracks(playlistId, userId, accessToken) {
 }
 
 function deleteTrack(position, trackUri, playlistId, userId, accessToken){
+  
+  
   $.ajax({
     url: "/user/delete_track",
     data: {
@@ -173,5 +175,9 @@ function deleteTrack(position, trackUri, playlistId, userId, accessToken){
     }
   }).done(function(data){
     console.log(data);
+    $("#fila_"+trackUri).hide();
+    
   })
 }
+
+

@@ -60,37 +60,25 @@ router.get('/delete_track', function(req, res){
   var position = parseInt(req.query.position);
   var trackUri = req.query.uri;
 
-  var body = {
-    '\"tracks\"': [
-      {'\"positions\"': [position],
-      '\"uri\"': '\"'+trackUri+'\"'
-      }
-    ]
-  };
+
+  var data_body = {
+    tracks: [ {position: [position], uri: trackUri } ] }; 
+  
   var authOptions = {
     url: 'https://api.spotify.com/v1/users/'+user_id+'/playlists/'+playlist_id+'/tracks',
-    headers: { 'Authorization': 'Bearer ' + access_token },  
-    body: JSON.stringify(body),
+    headers: { 'Authorization': 'Bearer ' + access_token },    
+    body: data_body,
     json: true
-  };
-  
+  };  
 
   request.del(authOptions, function(error, response, body) {
-    /*if (!error && response.statusCode === 200) {
-      trackItems = body.items;
+    if (!error && response.statusCode === 200) {
       res.send({
-        'tracks' :trackItems
-      })
+        'data' : body
+      });
     }else{
       console.log(error);
-    }*/
-
-    console.log("STATUS: " + res.statusCode);
-    console.log("HEADERS: " + JSON.stringify(res.headers));
-    console.log("BODY: " + body);
-    res.send({
-      'data' : body
-    });
+    }
   });
 })
 

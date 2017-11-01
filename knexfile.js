@@ -4,7 +4,7 @@ module.exports = {
   connection: {
     host: 'localhost',
     user: 'postgres',
-    password: '1234',
+    password: '2711',
     database: 'spotify_users'
   },  
   useNullAsDefault: true,
