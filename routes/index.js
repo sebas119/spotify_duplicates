@@ -100,6 +100,8 @@ router.get('/callback', function(req, res) {
             })
         });
 
+        
+
         // we can also pass the token to the browser to make requests from there
         res.redirect('/#' +
           querystring.stringify({

@@ -1,6 +1,6 @@
-#login, #loggedin, #data_playlist, #current_playlist_track {
+/*#loggedin, #data_playlist, #current_playlist_track {
   display: none;
-}
+}*/
 .text-overflow {
   overflow: hidden;
   text-overflow: ellipsis;
