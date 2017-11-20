@@ -8,6 +8,9 @@ var client_id = '8ccc9b20802541f299f19b036c7fd40e'; // Your client id
 var client_secret = '68c5fced61fd478cb64959eb83fa703c'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
+
+var AccessToken = '';
+var RefreshToken = '';
 /**
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
@@ -76,6 +79,9 @@ router.get('/callback', function(req, res) {
 
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
+        
+        AccessToken = access_token;
+        RefreshToken = refresh_token;
 
         var options = {
           url: 'https://api.spotify.com/v1/me',
@@ -85,14 +91,16 @@ router.get('/callback', function(req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          //console.log(body);
+          console.log(body);
+          imagenPerfil = '';
+          //if (body.images != []){imagenPerfil = body.images[0].url}
           new User({
             idUserSpotify: body.id,            
             displayName: body.display_name,
             emailAddress: body.email,
             spotifyUri: body.uri,
             linkUserSpotify: body.href,
-            profileImageLink: body.images[0].url
+            profileImageLink: imagenPerfil
           })
             .save()
             .then(function(save){
@@ -100,14 +108,14 @@ router.get('/callback', function(req, res) {
             })
         });
 
-        
-
+        //Se pueden pasar los parametros de esta forma
+        res.redirect('/#/playlist/'+access_token+'/'+refresh_token);
         // we can also pass the token to the browser to make requests from there
-        res.redirect('/#' +
+        /*res.redirect('/#' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
-          }));
+          }));*/
       } else {
         res.redirect('/#' +
           querystring.stringify({
@@ -142,4 +150,18 @@ router.get('/refresh_token', function(req, res) {
   });
 });
 
-module.exports = router
+router.get('/get_tokens', function(req, res) {
+  
+    var access_token = AccessToken;
+    var refresh_token = RefreshToken;
+
+    var tokens = {
+      access_token: access_token,
+      refresh_token: refresh_token
+    }
+
+    res.json(tokens); 
+    
+  });
+
+module.exports = router;

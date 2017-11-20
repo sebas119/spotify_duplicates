@@ -7,10 +7,10 @@ angular
         templateUrl: "views/login.html",
         controller: "ctrlLogin"
       })
-      .state("callback", {
-        url: "/",
+      .state("playlist", {
+        url: "/playlist/:accesstoken/:refreshtoken",
         templateUrl: "views/playlist.html",
-        controller: "ctrlCallback"
+        controller: "ctrlPlaylist"
       });
 
     $urlRouterProvider.otherwise("startlogin");
@@ -19,67 +19,89 @@ angular
     //Se inyecta el metodo http
     var comun = {};
 
-    comun.tareas = [];
+    comun.tokens = [];
 
-    comun.tarea = {};
+    comun.token = {};
 
-
+    comun.getTokens = function(){
+      $http({
+        method : "GET",
+        url : "get_tokens"
+      }).then(function mySuccess(response) {
+          console.log(response.data);
+          angular.copy(response.data, comun.tokens);
+          return comun.tokens;
+      }, function myError(response) {
+          $scope.myWelcome = response.statusText;
+      });
+      
+    } 
 
     /**
          * Seccion de metodos remotos
          */
     return comun;
   })
+  .service("tokenService", function($http, $q) {
+    return {
+      getAll: getAll
+   }
+
+  function getAll () {
+      var defered = $q.defer();
+      var promise = defered.promise;
+
+      $http.get('get_tokens')
+          .success(function(data) {
+              defered.resolve(data);
+          })
+          .error(function(err) {
+              defered.reject(err)
+          });
+
+      return promise;
+  }
+  })
   .controller("ctrlLogin", function($scope, $state) {
     
-    
-      /**
-         * Obtains parameters from the hash of the URL
-         * @return Object
-         */
-      function getHashParams() {
-        var hashParams = {};
-        var e,
-          r = /([^&;=]+)=?([^&;]*)/g,
-          q = window.location.hash.substring(1);
-        while ((e = r.exec(q))) {
-          hashParams[e[1]] = decodeURIComponent(e[2]);
-        }
-        return hashParams;
-      }
+  
 
-      var params = getHashParams();
-
-      var access_token = params.access_token,
-        refresh_token = params.refresh_token,
-        error = params.error;
-
-      if (error) {
-        alert("There was an error during the authentication");
-      } else {
-        if (access_token) {
-          $.ajax({
-            url: "https://api.spotify.com/v1/me",
-            headers: {
-              Authorization: "Bearer " + access_token
-            },
-            success: function(response) {
-              console.log(response.id);
-              $state.go("callback");
-            }
-          });
-        } else {
-          // render initial screen
-          $("#login").show();
-          $("#loggedin").hide();
-        }
-
-        
-      }
    
     
     
   })
-  .controller("ctrlCallback", function($scope, $state) {
-   
+  .controller("ctrlPlaylist", function($scope, $state, tokenService, $stateParams) {
+    var token = '';
+    var param1 = $stateParams.accesstoken;
+    alert(param1);
+    tokenService
+      .getAll()
+      .then(function(data){
+        token = data;
+        
+      }).catch(function(err){
+
+      })
+    
+      console.log(token);
+
+
+
+
+  /*var token = '';
+    $http({
+      method : "GET",
+      url : "get_tokens"      
+    }).then(function mySuccess(response) {        
+        $scope.accesstoken = response.data.access_token;                
+    }, function myError(response) {
+        $scope.myWelcome = response.statusText;
+    });*/
+
+    
+    
+  
+
+    
+
   });
