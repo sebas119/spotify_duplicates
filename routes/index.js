@@ -34,7 +34,7 @@ router.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email playlist-modify-public playlist-modify-private';
+  var scope = 'user-read-private user-read-email playlist-modify-public playlist-modify-private playlist-read-private';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -163,5 +163,23 @@ router.get('/get_tokens', function(req, res) {
     res.json(tokens); 
     
   });
+
+router.get('/get_data_user', function (req, res) {
+
+  var access_token = req.query.access_token;
+  
+
+  var options = {
+    url: 'https://api.spotify.com/v1/me',
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    json: true
+  };
+
+  request.get(options, function (error, response, body) {
+    res.send(body);
+    
+  });
+
+});
 
 module.exports = router;
