@@ -81,25 +81,60 @@
   </dl>
 
 
+  <div id="data_playlist" ng-repeat="playlist in playlists">
 
-  <div id="playlist">
-    <div class="page_index_site bordes_amx">
-      <div class="journals">
-        <ul>
-          <div id="data_playlist" ng-repeat="playlist in playlists">
-            <div ng-if="playlist.owner.id == datauser.id">
-            <li>
-              <a href="{{playlist.images[1].url}}">
-                <img class="box" href="#collapseOne_{{playlist.owner.id}}" src="{{playlist.images[1].url}}">
+    <div id="playlist">
+      <div id="accordion" role="tablist">
+
+        <div class="card">
+          <div class="card-header" role="tab" id="headingOne">
+            <h5 class="mb-0">
+              <a data-toggle="collapse" href="#collapseOne_{{playlist.owner.id}}" aria-expanded="true" aria-controls="collapseOne_{{playlist.owner.id}}"
+                ng-click="getTracks(playlist.id, datauser.id)"> {{playlist.name}}
               </a>
-            </li>
+            </h5>
+          </div>
+
+          
+          <div id="collapseOne_{{playlist.owner.id}}" class="collapse" role="tabpanel" aria-labelledby="headingOne" data-parent="#accordion">
+            <div id="bodyCollapseOne_{{playlist.owner.id}}" class="card-body">
+
+              <div ng-repeat="track in tracks">
+
+                <table class="table">
+                  <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">#</th>
+                      <th scope="col">Nombre</th>
+                      <th scope="col">Accion</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+
+
+                    <button class="btn btn-link"> value.track.name </button>
+                    </br>
+                    <tr id="fila_+value.track.uri+">
+                      <th scope="row"></th>
+                      <td>+ track.name +</td>
+                      <td>
+                        <a target="_blank" class="btn btn-primary" href="+value.track.album.artists[0].external_urls.spotify +"
+                          role="button">Reproducir</a>
+                        <button class="btn btn-danger" ng-click="deleteTrack( key , value.track.uri,playlistId, userId  , accessToken )"
+                          type="button">Eliminar</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+
+              </div>
+
             </div>
           </div>
-        </ul>
+        </div>
       </div>
     </div>
   </div>
-
 
 
   <div>

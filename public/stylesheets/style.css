@@ -27,3 +27,34 @@
 {
     font-size: 87px;
 }
+
+.page_index_site .journals ul {
+    PADDING-RIGHT: 0px;
+    PADDING-LEFT: 0px;
+    FLOAT: left;
+    PADDING-BOTTOM: 0px;
+    MARGIN: 15px 0px;
+    WIDTH: 100%;
+    PADDING-TOP: 0px;
+    LIST-STYLE-TYPE: none;
+}
+
+.page_index_site .journals ul li .box {
+    max-width: 250px;
+    height: 200px;
+    margin-right: 10px !important;
+    margin-top: 10px !important;
+    margin-bottom: 10px !important;
+    margin-left: 10px !important;
+    PADDING-RIGHT: 2px;
+    DISPLAY: inline;
+    PADDING-LEFT: 2px;
+    FLOAT: left;
+    PADDING-BOTTOM: 2px;
+    WIDTH: 33%;
+    PADDING-TOP: 2px;
+    padding: 1px !important;
+    -webkit-box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.33);
+    -moz-box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.33);
+    box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.33);
+}
