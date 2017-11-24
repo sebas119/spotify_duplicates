@@ -26,7 +26,7 @@
                 <div class="row">
                   <div class="col-lg-4">
                     <p class="text-center">
-                      <img class="media-object" src="{{datauser.images[0].url}}" width="125%" height="60%" />
+                      <img class="media-object" ng-src="{{datauser.images[0].url}}" width="125%" height="60%" />
                     </p>
                   </div>
                   <div class="col-lg-8">
@@ -47,7 +47,7 @@
                 <div class="row">
                   <div class="col-lg-12">
                     <p>
-                      <a href="#" class="btn btn-danger btn-block">Cerrar Sesion</a>
+                      <a href="/#/startlogin" class="btn btn-danger btn-block">Cerrar Sesion</a>
                     </p>
                   </div>
                 </div>
@@ -64,14 +64,10 @@
 <br>
 <br>
 
-<div id="loggedin">
-
-  <div id="oauth">
-  </div>
-  <button class="btn btn-default" id="obtain-new-token" ng-click="refrescarToken()">Obtain new token using the refresh token</button>
-  <button class="btn btn-primary" id="get_playlist" ng-click="obtenerPlaylist()">Get my Playlist</button>
 
 
+  
+  <!--<button class="btn btn-default" id="obtain-new-token" ng-click="refrescarToken()">Obtain new token using the refresh token</button>
 
   <dl class="dl-horizontal">
     <dt>Access token</dt>
@@ -79,8 +75,11 @@
     <dt>Refresh token</dt>
     <dd ng-model="refreshtoken" class="text-overflow">{{refreshtoken}}></dd>
   </dl>
+-->
 
-
+<div class="row">
+  <h3 style="text-align: center">My playlists</h3>
+</div>
 
   <div id="playlist">
     <div class="page_index_site bordes_amx">
@@ -89,9 +88,9 @@
           <div id="data_playlist" ng-repeat="playlist in playlists">
             <div ng-if="playlist.owner.id == datauser.id">
             <li>
-              <a href="{{playlist.images[1].url}}">
-                <img class="box" href="#collapseOne_{{playlist.owner.id}}" src="{{playlist.images[1].url}}">
-              </a>
+              <a  ng-checked="existsPlaylist(playlist.id, selected)" ng-click="addPlaylist(playlist.id, selected)">
+                <img class="box"  ng-src="{{playlist.images[1].url}}">
+              </a>              
             </li>
             </div>
           </div>
@@ -100,11 +99,43 @@
     </div>
   </div>
 
+<br>
+<br>
 
+<code style="display: block; padding: 8px;">{{selected | json}}</code>
+<br>
+<br>
+<div class="row">
+  <div class="text-center">
+    <button ng-click="getTracks(selected, datauser.id)" class="btn btn-primary">Show Duplicates</button>
+  </div>
+</div>
+
+<div class="row">
+<div class="col-md-12">
+  <table class="table table-hover">
+    <thead>
+      <tr>
+        
+        <th>Nombre</th>
+        
+      </tr>
+    </thead>
+    <tbody>
+      <div ng-repeat="track in tracks">
+      <tr>
+        
+        <td>{{track.track.name}}</td>
+        
+      </tr> 
+      </div>   
+    </tbody>
+  </table>
+</div>
+</div>
 
   <div>
     <div id="my_tracks">
     </div>
   </div>
 
-</div>

@@ -64,11 +64,6 @@ angular
   })*/
   .controller("ctrlLogin", function ($scope, $state) {
 
-
-
-
-
-
   })
   .controller("ctrlPlaylist", function ($scope, $state, $stateParams, $http) {
     
@@ -77,6 +72,8 @@ angular
 
     $scope.accesstoken = access_token;
     $scope.refreshtoken = refresh_token;
+
+    $scope.selected = [];
 
     $scope.refrescarToken = function () {
       $http({
@@ -93,7 +90,6 @@ angular
       });
     }
 
-
       $http({
         method : "GET",
         url: "/get_data_user" ,     
@@ -107,7 +103,7 @@ angular
           $scope.myWelcome = response.statusText;
       });
       
-    $scope.obtenerPlaylist = function () {
+    //$scope.obtenerPlaylist = function () {
       $http({
         method: "GET",
         url: "/user/my_playlists",
@@ -117,10 +113,27 @@ angular
       }).then(function mySuccess(response) {
         var playlist = response.data.playlists; 
         $scope.playlists = playlist;          
+        console.log(playlist);
         
       }, function myError(response) {
         $scope.myWelcome = response.statusText;
       });
+    //}
+
+    $scope.addPlaylist = function (item, list) {     
+      var idx = list.indexOf(item);
+      
+      if (idx > -1) {
+        list.splice(idx, 1);
+      } else {
+        if (list.length <= 1) { //para solo seleccionar dos listas maximo
+          list.push(item);  
+        }
+      }            
+    }
+    
+    $scope.existsPlaylist = function (item, list) {
+      return list.indexOf(item) > -1;
     }
 
     $scope.getTracks = function (playlistId, userId) {
@@ -136,7 +149,7 @@ angular
         var tracks = response.data.tracks;
 
         $scope.tracks = tracks;
-        console.log(response.data);       
+        console.log( $scope.tracks);
       }, function myError(response) {
         $scope.myWelcome = response.statusText;
       });
