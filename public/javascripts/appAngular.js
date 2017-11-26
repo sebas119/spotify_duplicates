@@ -146,15 +146,32 @@ angular
           access_token: access_token
         }        
       }).then(function mySuccess(response) {        
-        var tracks = response.data.tracks;
+        var track = response.data.tracks;
 
-        $scope.tracks = tracks;
-        console.log( $scope.tracks);
+        $scope.tracks = track;
+        console.log($scope.tracks);
       }, function myError(response) {
         $scope.myWelcome = response.statusText;
       });
     }
 
+    $scope.deleteTrack = function (position, trackUri, playlistId, userId) {
+      $http({
+        method: "GET",
+        url: "/user/delete_track",
+        params: {
+          user_id: userId,
+          playlist_id: playlistId,
+          access_token: access_token,
+          position: position,
+          uri: trackUri
+        }
+      }).then(function mySuccess(response) {
+        console.log(response.data);        
+      }, function myError(response) {
+        $scope.myWelcome = response.statusText;
+      });
+    }
    
     /*var token = '';
       $http({
