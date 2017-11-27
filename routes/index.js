@@ -91,21 +91,38 @@ router.get('/callback', function(req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          console.log(body);
-          imagenPerfil = '';
-          //if (body.images != []){imagenPerfil = body.images[0].url}
-          new User({
-            idUserSpotify: body.id,            
-            displayName: body.display_name,
-            emailAddress: body.email,
-            spotifyUri: body.uri,
-            linkUserSpotify: body.href,
-            profileImageLink: imagenPerfil
-          })
-            .save()
-            .then(function(save){
-              console.log(save);
-            })
+          var user_id = body.id;
+          var bd_id = '';
+          var imagenPerfil = "";
+          
+          //Registra el ingreso de un usuario en la app o lo actualiza si ya había ingresado previamente
+          new User({ "idUserSpotify": user_id})
+            .fetch()
+            .then(function(model) {
+              // outputs 'Slaughterhouse Five'
+              if (model) {
+                bd_id = model.get("idUserSpotify");
+                User.where({ idUserSpotify: bd_id })
+                  .save({ last_entry: "NOW()" },{method: "update"})
+                  .then(function(user) {
+                    //console.log(user);
+                  });
+              }else {
+                new User({
+                  idUserSpotify: body.id,
+                  displayName: body.display_name,
+                  emailAddress: body.email,
+                  spotifyUri: body.uri,
+                  linkUserSpotify: body.href,
+                  profileImageLink: imagenPerfil
+                })
+                  .save()
+                  .then(function(save) {
+                    //console.log(save);
+                  });
+              }                
+            });
+          
         });
 
         //Se pueden pasar los parametros de esta forma

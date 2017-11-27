@@ -89,7 +89,7 @@
             <div ng-if="playlist.owner.id == datauser.id">
             <li>
               <a  ng-checked="existsPlaylist(playlist.id, selected)" ng-click="addPlaylist(playlist.id, selected)">
-                <img class="box"  ng-src="{{playlist.images[1].url}}">
+                <img class="box"  ng-src="{{playlist.images[1].url}}">               
               </a>              
             </li>
             </div>
@@ -123,9 +123,9 @@
     </thead>
     <tbody>
       
-      <tr ng-repeat="track in tracks">
+      <tr ng-repeat="track in tracks">        
         <td>{{$index + 1}}</td>
-        <td>{{track.track.name}}</td>    
+        <td ng-class="{ 'duplicate': tracks.indexOf(track.track.name) !== tracks.lastIndexOf(track.track.name) }">{{track.track.name}} {{track.track.id}}</td>    
         <td><button class="btn btn-danger btn-xs" ng-click="deleteTrack($index, track.track.uri, selected, datauser.id)">Eliminar</button></td>
       </tr>     
       

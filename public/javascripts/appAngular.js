@@ -1,5 +1,5 @@
 angular
-  .module("appSpotify", ["ui.router"])
+  .module("appSpotify", ["ui.router","ui.filters"])
   .config(function ($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state("login", {
@@ -147,9 +147,11 @@ angular
         }        
       }).then(function mySuccess(response) {        
         var track = response.data.tracks;
-
+        var duplicates = response.data.duplicates;
+        $scope.duplicates = duplicates;
         $scope.tracks = track;
-        console.log($scope.tracks);
+        //console.log($scope.tracks);
+        console.log(response.data.duplicates);
       }, function myError(response) {
         $scope.myWelcome = response.statusText;
       });

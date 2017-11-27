@@ -3,6 +3,7 @@ var request = require('request'); // "Request" library
 var querystring = require('querystring');
 var User = require('../models/users');
 var router = express.Router();
+var _ = require('lodash');
 
 
 router.get('/my_playlists', function(req, res) {
@@ -27,6 +28,17 @@ router.get('/my_playlists', function(req, res) {
     });
   });
 
+var isEqualFunction = function(a, b) {
+  return a.id === b.id && a.uns === b.uns;
+};
+
+var compareFunction = function(a, b) {
+  return a.id === b.id
+    ? a.uns === b.uns ? 0 : a.uns < b.uns ? -1 : 1
+    : a.id < b.id ? -1 : 1;
+};
+
+
 
 router.get('/get_tracks', function(req, res) {
     var user_id = req.query.user_id;
@@ -42,9 +54,27 @@ router.get('/get_tracks', function(req, res) {
   
     request.get(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
-        trackItems = body.items;
+        var trackItems = body.items;
+        
+        
+      var grouped = _.countBy(body.items, function(item) {
+        return item.track.id;
+      });
+
+      var duplicateInvoiceIds = [];
+      _.filter(grouped, function(qty, key) {
+        if (qty > 1) duplicateInvoiceIds.push(key);
+      });
+
+      var result = _.filter(body.items, function(item) {
+        return _.indexOf(duplicateInvoiceIds, item.track.id) > -1;
+      });
+
+      //console.log(result);
+        
         res.send({
-          'tracks' :trackItems
+          'tracks' :trackItems,
+          'duplicates': result
         })
       }else{
         console.log(error);

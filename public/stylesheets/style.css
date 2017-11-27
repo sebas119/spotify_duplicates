@@ -1,12 +1,6 @@
 /*#loggedin, #data_playlist, #current_playlist_track {
   display: none;
 }*/
-.text-overflow {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  width: 500px;
-}
 
 
 .navbar-login
@@ -59,7 +53,11 @@
     box-shadow: 0px 0px 6px 3px rgba(0, 0, 0, 0.33);
 }
 
-    .page_index_site .journals ul li .box:hover  {
+    .page_index_site .journals ul li .box:hover {
  
-    box-shadow: 0px 0px 6px 3px rgba(15, 15, 15, 0.651);
+    box-shadow: 0px 0px 6px 3px rgba(15, 15, 15, 0.651);    
+}
+
+.duplicate {
+    background: yellow;
 }
