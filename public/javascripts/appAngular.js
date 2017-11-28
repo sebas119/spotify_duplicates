@@ -1,5 +1,5 @@
 angular
-    .module("appSpotify", ["ui.router", "ui.filters"])
+    .module("appSpotify", ["ui.router", "ui.filters", 'ngAnimate', 'toastr'])
     .config(function($stateProvider, $urlRouterProvider) {
         $stateProvider
             .state("login", {
@@ -65,7 +65,7 @@ angular
     .controller("ctrlLogin", function($scope, $state) {
 
     })
-    .controller("ctrlPlaylist", function($scope, $state, $stateParams, $http) {
+    .controller("ctrlPlaylist", function($scope, $state, $stateParams, $http, toastr) {
 
         var access_token = $stateParams.accesstoken;
         var refresh_token = $stateParams.refreshtoken;
@@ -180,8 +180,9 @@ angular
                     position: position,
                     uri: trackUri
                 }
-            }).then(function mySuccess(response) {
-                //console.log(response.data);        
+            }).then(function mySuccess(response) {   
+                toastr.success('Eliminado', 'Se elimino con exito!');
+                $scope.getTracks($scope.selected, userId);
             }, function myError(response) {
                 $scope.myWelcome = response.statusText;
             });
@@ -201,6 +202,7 @@ angular
                         }
                     }).then(function mySuccess(response) {
                         console.log(response.data);
+                        $scope.getTracks($scope.selected, userId);
                     }, function myError(response) {
                         $scope.myWelcome = response.statusText;
                     });
