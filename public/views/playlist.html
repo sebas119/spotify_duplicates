@@ -125,12 +125,17 @@
       
       <tr ng-repeat="track in tracks">        
         <td>{{$index + 1}}</td>
-        <td ng-class="{ 'duplicate': tracks.indexOf(track.track.name) !== tracks.lastIndexOf(track.track.name) }">{{track.track.name}} {{track.track.id}}</td>    
+        <td ng-class="{ 'duplicate': tracks.indexOf(track.track.name) !== tracks.lastIndexOf(track.track.name) }">{{track.track.name}}</td>    
         <td><button class="btn btn-danger btn-xs" ng-click="deleteTrack($index, track.track.uri, selected, datauser.id)">Eliminar</button></td>
       </tr>     
       
     </tbody>
   </table>
+</div>
+<div class="row">
+  <div class="text-center">
+    <button ng-click="deleteDuplicates(cleantracksUris, selected, datauser.id, duplicates)" class="btn btn-danger">Delete Duplicates</button>
+  </div>
 </div>
 </div>
 
@@ -139,3 +144,9 @@
     </div>
   </div>
 
+
+
+
+<br>
+<br>
+<br>
