@@ -8,6 +8,9 @@ var client_id = '8ccc9b20802541f299f19b036c7fd40e'; // Your client id
 var client_secret = '68c5fced61fd478cb64959eb83fa703c'; // Your secret
 var redirect_uri = 'http://localhost:8888/callback'; // Your redirect uri
 
+
+var AccessToken = '';
+var RefreshToken = '';
 /**
  * Generates a random string containing numbers and letters
  * @param  {number} length The length of the string
@@ -31,7 +34,7 @@ router.get('/login', function(req, res) {
   res.cookie(stateKey, state);
 
   // your application requests authorization
-  var scope = 'user-read-private user-read-email playlist-modify-public playlist-modify-private';
+  var scope = 'user-read-private user-read-email playlist-modify-public playlist-modify-private playlist-read-private';
   res.redirect('https://accounts.spotify.com/authorize?' +
     querystring.stringify({
       response_type: 'code',
@@ -76,6 +79,9 @@ router.get('/callback', function(req, res) {
 
         var access_token = body.access_token,
             refresh_token = body.refresh_token;
+        
+        AccessToken = access_token;
+        RefreshToken = refresh_token;
 
         var options = {
           url: 'https://api.spotify.com/v1/me',
@@ -85,27 +91,48 @@ router.get('/callback', function(req, res) {
 
         // use the access token to access the Spotify Web API
         request.get(options, function(error, response, body) {
-          //console.log(body);
-          new User({
-            idUserSpotify: body.id,            
-            displayName: body.display_name,
-            emailAddress: body.email,
-            spotifyUri: body.uri,
-            linkUserSpotify: body.href,
-            profileImageLink: body.images[0].url
-          })
-            .save()
-            .then(function(save){
-              console.log(save);
-            })
+          var user_id = body.id;
+          var bd_id = '';
+          var imagenPerfil = "";
+          
+          //Registra el ingreso de un usuario en la app o lo actualiza si ya había ingresado previamente
+          new User({ "idUserSpotify": user_id})
+            .fetch()
+            .then(function(model) {
+              // outputs 'Slaughterhouse Five'
+              if (model) {
+                bd_id = model.get("idUserSpotify");
+                User.where({ idUserSpotify: bd_id })
+                  .save({ last_entry: "NOW()" },{method: "update"})
+                  .then(function(user) {
+                    //console.log(user);
+                  });
+              }else {
+                new User({
+                  idUserSpotify: body.id,
+                  displayName: body.display_name,
+                  emailAddress: body.email,
+                  spotifyUri: body.uri,
+                  linkUserSpotify: body.href,
+                  profileImageLink: imagenPerfil
+                })
+                  .save()
+                  .then(function(save) {
+                    //console.log(save);
+                  });
+              }                
+            });
+          
         });
 
+        //Se pueden pasar los parametros de esta forma
+        res.redirect('/#/playlist/'+access_token+'/'+refresh_token);
         // we can also pass the token to the browser to make requests from there
-        res.redirect('/#' +
+        /*res.redirect('/#' +
           querystring.stringify({
             access_token: access_token,
             refresh_token: refresh_token
-          }));
+          }));*/
       } else {
         res.redirect('/#' +
           querystring.stringify({
@@ -140,4 +167,36 @@ router.get('/refresh_token', function(req, res) {
   });
 });
 
-module.exports = router
+router.get('/get_tokens', function(req, res) {
+  
+    var access_token = AccessToken;
+    var refresh_token = RefreshToken;
+
+    var tokens = {
+      access_token: access_token,
+      refresh_token: refresh_token
+    }
+
+    res.json(tokens); 
+    
+  });
+
+router.get('/get_data_user', function (req, res) {
+
+  var access_token = req.query.access_token;
+  
+
+  var options = {
+    url: 'https://api.spotify.com/v1/me',
+    headers: { 'Authorization': 'Bearer ' + access_token },
+    json: true
+  };
+
+  request.get(options, function (error, response, body) {
+    res.send(body);
+    
+  });
+
+});
+
+module.exports = router;
