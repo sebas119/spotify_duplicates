@@ -86,6 +86,57 @@ router.get('/get_tracks', function(req, res) {
     });
 });
 
+router.get('/get_multiple_tracks', function (req, res) {
+  var user_id = req.query.user_id;
+  var playlist_id = req.query.playlist_id;
+  // requesting access token from refresh token
+  var access_token = req.query.access_token;
+  var trackItems1 = {};
+  var trackItems2 = {};
+
+  var authOptions1 = {
+    url: 'https://api.spotify.com/v1/users/' + user_id + '/playlists/' + playlist_id[0] + '/tracks',
+    headers: {
+      'Authorization': 'Bearer ' + access_token
+    },
+    json: true
+  };
+
+  var authOptions2 = {
+    url: 'https://api.spotify.com/v1/users/' + user_id + '/playlists/' + playlist_id[1] + '/tracks',
+    headers: {
+      'Authorization': 'Bearer ' + access_token
+    },
+    json: true
+  };
+
+  request.get(authOptions1, function (error, response, body) {
+    if (!error && response.statusCode === 200) {
+       trackItems1 = body.items;       
+      request.get(authOptions2, function (error, response, body) {
+        if (!error && response.statusCode === 200) {
+          trackItems2 = body.items;
+          res.send({
+            'track1': trackItems1,
+            'track2': trackItems2           
+          });
+        } else {
+          console.log(error);
+        }
+      });
+
+    } else {
+      console.log(error);
+    }
+  });
+
+  
+
+ 
+
+
+});
+
 router.get('/delete_track', function(req, res) {
     var user_id = req.query.user_id;
     var playlist_id = req.query.playlist_id;

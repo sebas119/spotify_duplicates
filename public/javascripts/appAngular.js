@@ -137,36 +137,58 @@ angular
         }
 
         $scope.getTracks = function(playlistId, userId) {
+          //For one playlist only
+          if (playlistId.length <= 1) {
             $http({
-                method: "GET",
-                url: "/user/get_tracks",
-                params: {
-                    user_id: userId,
-                    playlist_id: playlistId,
-                    access_token: access_token
-                }
+              method: "GET",
+              url: "/user/get_tracks",
+              params: {
+                user_id: userId,
+                playlist_id: playlistId,
+                access_token: access_token
+              }
             }).then(function mySuccess(response) {
-                var track = response.data.tracks;
-                var duplicates = response.data.duplicates;
-                var cleantracks = response.data.cleantracks;
+              $scope.table = '1';
+              var track = response.data.tracks;
+              var duplicates = response.data.duplicates;
+              var cleantracks = response.data.cleantracks;
 
-                //Here I save in this array all the uris
-                cleantracksUris = [];
-                angular.forEach(cleantracks, function(value, key) {
-                    cleantracksUris.push(value.track.uri);
-                });
+              //Here I save in this array all the uris
+              cleantracksUris = [];
+              angular.forEach(cleantracks, function (value, key) {
+                cleantracksUris.push(value.track.uri);
+              });
 
-
-
-
-                $scope.cleantracksUris = cleantracksUris;
-                $scope.duplicates = duplicates;
-                $scope.tracks = track;
-                //console.log($scope.tracks);
-                //console.log(response.data.duplicates);
+              $scope.cleantracksUris = cleantracksUris;
+              $scope.duplicates = duplicates;
+              $scope.tracks = track;
+              //console.log($scope.tracks);
+              //console.log(response.data.duplicates);
             }, function myError(response) {
-                $scope.myWelcome = response.statusText;
+              $scope.myWelcome = response.statusText;
             });
+          }else{
+            $http({
+              method: "GET",
+              url: "/user/get_multiple_tracks",
+              params: {
+                user_id: userId,
+                playlist_id: playlistId,
+                access_token: access_token
+              }
+            }).then(function mySuccess(response) {
+              $scope.table = '2';              
+              var track1 = response.data.track1;
+              var track2 = response.data.track2;
+
+              $scope.track1 = track1;
+              $scope.track2 = track2;
+              
+            }, function myError(response) {
+              $scope.myWelcome = response.statusText;
+            });
+          }
+            
         }
 
         $scope.deleteTrack = function(position, trackUri, playlistId, userId) {
@@ -202,12 +224,13 @@ angular
                         }
                     }).then(function mySuccess(response) {
                         console.log(response.data);
+                      toastr.success('Se han borrado las canciones duplicadas con exito', 'Exito');
                         $scope.getTracks($scope.selected, userId);
                     }, function myError(response) {
                         $scope.myWelcome = response.statusText;
                     });
                 } else {
-                    alert('No existen canciones repetidas');
+                  toastr.warning('Esta lista de reproducción no tiene canciones duplicadas', 'Alerta');
                 }
             }
             /*var token = '';
